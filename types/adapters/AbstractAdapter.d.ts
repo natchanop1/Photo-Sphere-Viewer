@@ -51,6 +51,11 @@ export abstract class AbstractAdapter<T> {
    */
   setTextureOpacity(mesh: Mesh, opacity: number);
 
+  /**
+   * @summary Cleanup a loaded texture, used on load abort
+   */
+  disposeTexture(textureData: TextureData);
+
 }
 
 export type AdapterConstructor<T extends AbstractAdapter<any>> = new (psv: Viewer, options?: any) => T;

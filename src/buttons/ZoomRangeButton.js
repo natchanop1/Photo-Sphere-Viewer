@@ -1,6 +1,6 @@
 import { EVENTS } from '../data/constants';
 import { SYSTEM } from '../data/system';
-import { getStyle } from '../utils';
+import { getStyle, Slider } from '../utils';
 import { AbstractButton } from './AbstractButton';
 
 /**
@@ -20,12 +20,10 @@ export class ZoomRangeButton extends AbstractButton {
 
     /**
      * @override
-     * @property {boolean} mousedown
      * @property {number} mediaMinWidth
      */
     this.prop = {
       ...this.prop,
-      mousedown    : false,
       mediaMinWidth: 0,
     };
 
@@ -47,17 +45,20 @@ export class ZoomRangeButton extends AbstractButton {
     this.zoomValue.className = 'psv-zoom-range-handle';
     this.zoomRange.appendChild(this.zoomValue);
 
+    /**
+     * @member {PSV.Slider}
+     * @readonly
+     * @private
+     */
+    this.slider = new Slider({
+      container: this.container,
+      direction: Slider.HORIZONTAL,
+      onUpdate : e => this.__onSliderUpdate(e),
+    });
+
     this.prop.mediaMinWidth = parseInt(getStyle(this.container, 'maxWidth'), 10);
 
-    this.container.addEventListener('mousedown', this);
-    this.container.addEventListener('touchstart', this);
-    this.psv.container.addEventListener('mousemove', this);
-    this.psv.container.addEventListener('touchmove', this);
-    this.psv.container.addEventListener('mouseup', this);
-    this.psv.container.addEventListener('touchend', this);
-
     this.psv.on(EVENTS.ZOOM_UPDATED, this);
-
     if (this.psv.prop.ready) {
       this.__moveZoomValue(this.psv.getZoomLevel());
     }
@@ -72,12 +73,7 @@ export class ZoomRangeButton extends AbstractButton {
    * @override
    */
   destroy() {
-    this.__stopZoomChange();
-
-    this.psv.container.removeEventListener('mousemove', this);
-    this.psv.container.removeEventListener('touchmove', this);
-    this.psv.container.removeEventListener('mouseup', this);
-    this.psv.container.removeEventListener('touchend', this);
+    this.slider.destroy();
 
     delete this.zoomRange;
     delete this.zoomValue;
@@ -96,12 +92,6 @@ export class ZoomRangeButton extends AbstractButton {
     /* eslint-disable */
     switch (e.type) {
       // @formatter:off
-      case 'mousedown':    this.__initZoomChangeWithMouse(e); break;
-      case 'touchstart':   this.__initZoomChangeByTouch(e);   break;
-      case 'mousemove':    this.__changeZoomWithMouse(e);     break;
-      case 'touchmove':    this.__changeZoomByTouch(e);       break;
-      case 'mouseup':      this.__stopZoomChange(e);          break;
-      case 'touchend':     this.__stopZoomChange(e);          break;
       case EVENTS.ZOOM_UPDATED: this.__moveZoomValue(e.args[0]); break;
       case EVENTS.READY:        this.__moveZoomValue(this.psv.getZoomLevel()); break;
       // @formatter:on
@@ -146,82 +136,15 @@ export class ZoomRangeButton extends AbstractButton {
     this.zoomValue.style.left = (level / 100 * this.zoomRange.offsetWidth - this.zoomValue.offsetWidth / 2) + 'px';
   }
 
-  /**
-   * @summary Handles mouse down events
-   * @param {MouseEvent} evt
-   * @private
-   */
-  __initZoomChangeWithMouse(evt) {
-    if (!this.prop.enabled) {
-      return;
-    }
-
-    this.prop.mousedown = true;
-    this.__changeZoom(evt.clientX);
-  }
-
-  /**
-   * @summary Handles touch events
-   * @param {TouchEvent} evt
-   * @private
-   */
-  __initZoomChangeByTouch(evt) {
-    if (!this.prop.enabled) {
-      return;
-    }
-
-    this.prop.mousedown = true;
-    this.__changeZoom(evt.changedTouches[0].clientX);
-  }
-
-  /**
-   * @summary Handles mouse up events
-   * @private
-   */
-  __stopZoomChange() {
-    if (!this.prop.enabled) {
-      return;
-    }
-
-    this.prop.mousedown = false;
-    this.prop.buttondown = false;
-  }
-
-  /**
-   * @summary Handles mouse move events
-   * @param {MouseEvent} evt
-   * @private
-   */
-  __changeZoomWithMouse(evt) {
-    if (!this.prop.enabled || !this.prop.mousedown) {
-      return;
-    }
-
-    evt.preventDefault();
-    this.__changeZoom(evt.clientX);
-  }
-
-  /**
-   * @summary Handles touch move events
-   * @param {TouchEvent} evt
-   * @private
-   */
-  __changeZoomByTouch(evt) {
-    if (!this.prop.enabled || !this.prop.mousedown) {
-      return;
-    }
-    this.__changeZoom(evt.changedTouches[0].clientX);
-  }
 
   /**
    * @summary Zoom change
-   * @param {number} x - mouse/touch position
    * @private
    */
-  __changeZoom(x) {
-    const userInput = x - this.zoomRange.getBoundingClientRect().left;
-    const zoomLevel = userInput / this.zoomRange.offsetWidth * 100;
-    this.psv.zoom(zoomLevel);
+  __onSliderUpdate(e) {
+    if (e.mousedown) {
+      this.psv.zoom(e.value * 100);
+    }
   }
 
 }

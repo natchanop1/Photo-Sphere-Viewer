@@ -15,7 +15,7 @@ const plugins = fs.readdirSync(path.join(__dirname, 'src/plugins'))
 
 const adapters = fs.readdirSync(path.join(__dirname, 'src/adapters'))
   .filter(p => fs.lstatSync(`src/adapters/${p}`).isDirectory())
-  .filter(p => p !== 'equirectangular' && p !== 'tiles-shared');
+  .filter(p => p !== 'equirectangular' && p !== 'shared');
 
 const banner = `/*!
 * Photo Sphere Viewer ${pkg.version}

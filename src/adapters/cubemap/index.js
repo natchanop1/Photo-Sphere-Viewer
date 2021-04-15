@@ -180,4 +180,15 @@ export class CubemapAdapter extends AbstractAdapter {
     }
   }
 
+  /**
+   * @override
+   */
+  disposeTexture(textureData) {
+    if (textureData.texture) {
+      for (let i = 0; i < 6; i++) {
+        textureData.texture[i].dispose();
+      }
+    }
+  }
+
 }

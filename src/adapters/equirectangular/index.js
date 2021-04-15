@@ -193,7 +193,12 @@ export class EquirectangularAdapter extends AbstractAdapter {
    */
   createMesh(scale = 1) {
     // The middle of the panorama is placed at longitude=0
-    const geometry = new THREE.SphereGeometry(SPHERE_RADIUS * scale, this.SPHERE_SEGMENTS, this.SPHERE_HORIZONTAL_SEGMENTS, -Math.PI / 2)
+    const geometry = new THREE.SphereGeometry(
+      SPHERE_RADIUS * scale,
+      this.SPHERE_SEGMENTS,
+      this.SPHERE_HORIZONTAL_SEGMENTS,
+      -Math.PI / 2
+    )
       .scale(-1, 1, 1);
 
     const material = new THREE.MeshBasicMaterial();
@@ -205,13 +210,8 @@ export class EquirectangularAdapter extends AbstractAdapter {
    * @override
    */
   setTexture(mesh, textureData) {
-    const { texture } = textureData;
-
-    if (mesh.material.map) {
-      mesh.material.map.dispose();
-    }
-
-    mesh.material.map = texture;
+    mesh.material.map?.dispose();
+    mesh.material.map = textureData.texture;
   }
 
   /**
@@ -220,6 +220,13 @@ export class EquirectangularAdapter extends AbstractAdapter {
   setTextureOpacity(mesh, opacity) {
     mesh.material.opacity = opacity;
     mesh.material.transparent = opacity < 1;
+  }
+
+  /**
+   * @override
+   */
+  disposeTexture(textureData) {
+    textureData.texture?.dispose();
   }
 
 }

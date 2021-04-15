@@ -1,0 +1,111 @@
+@import '../../styles/vars';
+
+$psv-progressbar-height: 3px !default;
+$psv-progressbar-height-active: 5px !default;
+$psv-progressbar-container: 20px !default;
+$psv-progressbar-progress-color: $psv-buttons-color !default;
+$psv-progressbar-buffer-color: $psv-buttons-active-background !default;
+$psv-progressbar-handle-size: 9px !default;
+$psv-progressbar-handle-color: white !default;
+
+.psv-video {
+  &-progressbar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: $psv-progressbar-container;
+    cursor: pointer;
+    z-index: $psv-navbar-zindex;
+
+    @at-root .psv--has-navbar & {
+      bottom: $psv-navbar-height;
+    }
+
+    & > * {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: $psv-progressbar-height;
+      transition: height 200ms linear, width 200ms linear;
+    }
+
+    &:hover > * {
+      height: $psv-progressbar-height-active;
+    }
+
+    &__progress {
+      background-color: $psv-progressbar-progress-color;
+    }
+
+    &__buffer {
+      background-color: $psv-progressbar-buffer-color;
+    }
+
+    &__handle {
+      display: none;
+      height: $psv-progressbar-handle-size !important;
+      width: $psv-progressbar-handle-size;
+      border-radius: 50%;
+      margin-bottom: #{- ($psv-progressbar-handle-size - $psv-progressbar-height-active) * .5};
+      margin-left: #{- $psv-progressbar-handle-size * .5};
+      background: $psv-progressbar-handle-color;
+    }
+  }
+
+  &-volume-button {
+    position: relative;
+
+    &--0 .psv-button-svg {
+      #lvl1,
+      #lvl2,
+      #lvl3 {
+        fill: none;
+      }
+    }
+
+    &--1 .psv-button-svg {
+      #lvl0,
+      #lvl2,
+      #lvl3 {
+        fill: none;
+      }
+    }
+
+    &--2 .psv-button-svg {
+      #lvl0,
+      #lvl3 {
+        fill: none;
+      }
+    }
+
+    &--3 .psv-button-svg {
+      #lvl0 {
+        fill: none;
+      }
+    }
+  }
+
+  &-volume {
+    &__container {
+      position: absolute;
+      left: 0;
+      bottom: $psv-navbar-height + $psv-buttons-padding;
+      width: $psv-navbar-height;
+      padding: $psv-buttons-padding 0;
+      height: 100px;
+      background: $psv-navbar-background;
+      z-index: $psv-navbar-zindex + 1;
+    }
+
+    &__progress {
+      position: absolute;
+      bottom: $psv-buttons-padding;
+      left: #{($psv-navbar-height - 5px) * .5};
+      width: 5px;
+      height: 10%;
+      background: $psv-progressbar-progress-color;
+    }
+  }
+}

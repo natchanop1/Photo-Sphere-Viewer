@@ -184,6 +184,7 @@ export const EVENTS = {
    * @event panorama-loaded
    * @memberof PSV
    * @summary Triggered when a panorama image has been loaded
+   * @param {PSV.TextureData} textureData
    */
   PANORAMA_LOADED   : 'panorama-loaded',
   /**

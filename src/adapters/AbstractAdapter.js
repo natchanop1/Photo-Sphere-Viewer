@@ -103,4 +103,12 @@ export class AbstractAdapter {
     throw new PSVError('setTextureOpacity not implemented');
   }
 
+  /**
+   * @summary Cleanup a loaded texture, used on load abort
+   * @param {PSV.TextureData} textureData
+   */
+  disposeTexture(textureData) { // eslint-disable-line no-unused-vars
+
+  }
+
 }

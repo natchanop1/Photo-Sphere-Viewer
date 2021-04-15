@@ -518,6 +518,7 @@ export class Viewer extends EventEmitter {
       .then((textureData) => {
         // check if another panorama was requested
         if (textureData.panorama !== this.config.panorama) {
+          this.adapter.disposeTexture(textureData);
           return Promise.reject(getAbortError());
         }
         return textureData;

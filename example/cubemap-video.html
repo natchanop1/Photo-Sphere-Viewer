@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoSphereViewer - equirectangular video demo</title>
+
+  <link rel="stylesheet" href="../dist/photo-sphere-viewer.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../dist/plugins/video.css">
+</head>
+<body>
+
+<div id="photosphere"></div>
+
+<script src="../node_modules/three/build/three.js"></script>
+<script src="../node_modules/uevent/browser.js"></script>
+<script src="../dist/photo-sphere-viewer.js"></script>
+<script src="../dist/adapters/cubemap-video.js"></script>
+<script src="../dist/plugins/video.js"></script>
+
+<script>
+  const viewer = new PhotoSphereViewer.Viewer({
+    container : 'photosphere',
+    adapter   : [PhotoSphereViewer.CubemapVideoAdapter, {
+      autoplay: true,
+      muted   : true,
+    }],
+    plugins   : [
+      [PhotoSphereViewer.VideoPlugin, {}],
+    ],
+    panorama  : {
+      source: 'video/showreel_cubemap.mp4',
+    },
+    loadingImg: 'assets/photosphere-logo.gif',
+  });
+</script>
+</body>
+</html>

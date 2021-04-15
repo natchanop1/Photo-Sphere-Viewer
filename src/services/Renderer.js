@@ -243,7 +243,7 @@ export class Renderer extends AbstractService {
 
     this.psv.needsUpdate();
 
-    this.psv.trigger(EVENTS.PANORAMA_LOADED);
+    this.psv.trigger(EVENTS.PANORAMA_LOADED, textureData);
   }
 
   /**

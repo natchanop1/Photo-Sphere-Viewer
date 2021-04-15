@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { AbstractAdapter, CONSTANTS, PSVError, utils } from '../..';
-import { Queue } from '../tiles-shared/Queue';
-import { Task } from '../tiles-shared/Task';
-import { buildErrorMaterial, createBaseTexture } from '../tiles-shared/utils';
+import { Queue } from '../shared/Queue';
+import { Task } from '../shared/Task';
+import { buildErrorMaterial, createBaseTexture } from '../shared/tiles-utils';
 
 
 /**
@@ -251,6 +251,9 @@ export class EquirectangularTilesAdapter extends AbstractAdapter {
       croppedHeight: panorama.width / 2,
       croppedX     : 0,
       croppedY     : 0,
+      poseHeading  : 0,
+      posePitch    : 0,
+      poseRoll     : 0,
     };
 
     if (panorama.baseUrl) {
@@ -269,7 +272,12 @@ export class EquirectangularTilesAdapter extends AbstractAdapter {
    * @override
    */
   createMesh(scale = 1) {
-    const geometry = new THREE.SphereGeometry(CONSTANTS.SPHERE_RADIUS * scale, this.SPHERE_SEGMENTS, this.SPHERE_HORIZONTAL_SEGMENTS, -Math.PI / 2)
+    const geometry = new THREE.SphereGeometry(
+      CONSTANTS.SPHERE_RADIUS * scale,
+      this.SPHERE_SEGMENTS,
+      this.SPHERE_HORIZONTAL_SEGMENTS,
+      -Math.PI / 2
+    )
       .scale(-1, 1, 1)
       .toNonIndexed();
 
@@ -317,6 +325,13 @@ export class EquirectangularTilesAdapter extends AbstractAdapter {
     // this.psv.renderer.scene.add(createWireFrame(this.prop.geom));
 
     setTimeout(() => this.__refresh(true));
+  }
+
+  /**
+   * @override
+   */
+  disposeTexture(textureData) {
+    textureData.texture?.dispose();
   }
 
   /**

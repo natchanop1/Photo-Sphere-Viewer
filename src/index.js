@@ -1,5 +1,6 @@
 import { Animation } from './Animation';
 import { AbstractButton } from './buttons/AbstractButton';
+import { AbstractComponent } from './components/AbstractComponent';
 import { registerButton } from './components/Navbar';
 import { DEFAULTS } from './data/config';
 import * as CONSTANTS from './data/constants';
@@ -15,6 +16,7 @@ import { Viewer } from './Viewer';
 
 export {
   AbstractButton,
+  AbstractComponent,
   AbstractPlugin,
   AbstractAdapter,
   Animation,
